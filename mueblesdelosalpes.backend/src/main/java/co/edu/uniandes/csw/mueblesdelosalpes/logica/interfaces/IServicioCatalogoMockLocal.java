@@ -42,6 +42,8 @@ public interface IServicioCatalogoMockLocal
      * @return muebles Lista de muebles
      */
     public List<Mueble> darMuebles();
+    
+    public Mueble buscarMueble(Long id);
 
     /**
      * Remueve un ejemplar del mueble (no el mueble)

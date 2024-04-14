@@ -15,6 +15,7 @@ package co.edu.uniandes.csw.mueblesdelosalpes.persistencia.mock;
 
 import co.edu.uniandes.csw.mueblesdelosalpes.dto.ExperienciaVendedor;
 import co.edu.uniandes.csw.mueblesdelosalpes.dto.Mueble;
+import co.edu.uniandes.csw.mueblesdelosalpes.dto.Oferta;
 import co.edu.uniandes.csw.mueblesdelosalpes.dto.RegistroVenta;
 import co.edu.uniandes.csw.mueblesdelosalpes.dto.TipoMueble;
 import co.edu.uniandes.csw.mueblesdelosalpes.dto.TipoUsuario;
@@ -34,7 +35,7 @@ import javax.ejb.Stateless;
  * Implementación de los servicios de persistencia
  * @author Juan Sebastián Urrego
  */
-
+@Stateless
 public class ServicioPersistenciaMock implements IServicioPersistenciaMockRemote, IServicioPersistenciaMockLocal {
 
     //-----------------------------------------------------------
@@ -60,6 +61,8 @@ public class ServicioPersistenciaMock implements IServicioPersistenciaMockRemote
      * Lista con los registros de ventas
      */
     private static ArrayList<RegistroVenta> registrosVentas;
+    
+    private static ArrayList<Oferta> ofertas;
 
     //-----------------------------------------------------------
     // Constructor
@@ -118,6 +121,9 @@ public class ServicioPersistenciaMock implements IServicioPersistenciaMockRemote
                 venta.setFechaVenta(new Date(r.nextInt()));
                 venta.setCiudad("Bogotá");
             }
+            
+            ofertas = new ArrayList();
+            ofertas.add(new Oferta(muebles.get(0), muebles.get(0).getPrecio()*0.50, 0));
         }
     }
 
@@ -164,6 +170,10 @@ public class ServicioPersistenciaMock implements IServicioPersistenciaMockRemote
         else if (obj instanceof RegistroVenta)
         {
             registrosVentas.add((RegistroVenta) obj);
+        } else if(obj instanceof Oferta) {
+            Oferta o = (Oferta) obj;
+            o.setId(ofertas.size()+1);
+            ofertas.add(o);
         }
     }
 
@@ -217,6 +227,17 @@ public class ServicioPersistenciaMock implements IServicioPersistenciaMockRemote
                     usuarios.set(i, editar);
                     break;
                 }
+            }
+        } else if (obj instanceof Oferta) {
+        
+            Oferta editar = (Oferta) obj;
+            Oferta oferta;
+            for (int i = 0; i < ofertas.size(); i++) {
+                oferta = ofertas.get(i);
+                if(oferta.getId() == editar.getId()){
+                    ofertas.set(i, oferta);
+                    break;
+                }                
             }
         }
     }
@@ -284,6 +305,10 @@ public class ServicioPersistenciaMock implements IServicioPersistenciaMockRemote
                 }
             }
         }
+        else if(obj instanceof Oferta){
+            Oferta ofertaBorrar = (Oferta) obj;
+            ofertas.remove(obj);
+        }
     }
 
     /**
@@ -309,7 +334,8 @@ public class ServicioPersistenciaMock implements IServicioPersistenciaMockRemote
         else if (c.equals(RegistroVenta.class))
         {
             return registrosVentas;
-        } 
+        } else if (c.equals(Oferta.class))
+            return ofertas;
         else
         {
             return null;
@@ -355,6 +381,16 @@ public class ServicioPersistenciaMock implements IServicioPersistenciaMockRemote
                 if (mue.getLogin().equals(id))
                 {
                     return mue;
+                }
+            }
+        }
+        else if(c.equals(Oferta.class)) {
+            
+            for(Object v : findAll(c)) {
+                
+                Oferta ofer = (Oferta) v;
+                if(ofer.getId() == Long.valueOf(id.toString())) {
+                    return ofer;
                 }
             }
         }

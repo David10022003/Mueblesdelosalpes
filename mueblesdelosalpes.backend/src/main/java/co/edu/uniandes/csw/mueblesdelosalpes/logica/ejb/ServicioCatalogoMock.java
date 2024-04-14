@@ -128,4 +128,10 @@ public class ServicioCatalogoMock implements IServicioCatalogoMockRemote,IServic
         return persistencia.findAll(Mueble.class);
     }
 
+    @Override
+    public Mueble buscarMueble(Long id) {
+        return (Mueble)persistencia.findById(Mueble.class, id);
+    }
+
+
 }

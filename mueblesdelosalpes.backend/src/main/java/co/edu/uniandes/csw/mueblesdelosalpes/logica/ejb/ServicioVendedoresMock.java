@@ -17,6 +17,7 @@ import co.edu.uniandes.csw.mueblesdelosalpes.excepciones.OperacionInvalidaExcept
 import co.edu.uniandes.csw.mueblesdelosalpes.logica.interfaces.IServicioVendedoresMockRemote;
 import co.edu.uniandes.csw.mueblesdelosalpes.logica.interfaces.IServicioVendedoresMockLocal;
 import co.edu.uniandes.csw.mueblesdelosalpes.logica.interfaces.IServicioPersistenciaMockLocal;
+import co.edu.uniandes.csw.mueblesdelosalpes.persistencia.mock.ServicioPersistenciaMock;
 
 import java.util.List;
 import javax.ejb.EJB;
@@ -48,6 +49,7 @@ public class ServicioVendedoresMock implements IServicioVendedoresMockRemote, IS
      */
     public ServicioVendedoresMock()
     {
+        persistencia  = new ServicioPersistenciaMock();
     }
 
     //-----------------------------------------------------------
@@ -98,6 +100,11 @@ public class ServicioVendedoresMock implements IServicioVendedoresMockRemote, IS
     public List<Vendedor> getVendedores()
     {
         return persistencia.findAll(Vendedor.class);
+    }
+    
+    @Override
+    public int prueba() {
+        return 1;
     }
 
 }
